@@ -25,6 +25,15 @@ can just fix the size of their placeholders.
     var options = { }; // no options
 
     function init(plot) {
+        // ability to completley turn off this plugin for particular flot:
+        plot.hooks.processOptions.push(processOptions);
+
+        function processOptions(plot, options) {
+            if (options.resize != false) {
+                plot.hooks.bindEvents.push(bindEvents);
+                plot.hooks.shutdown.push(shutdown);
+            }
+        }
         function onResize() {
             var placeholder = plot.getPlaceholder();
 
@@ -46,14 +55,12 @@ can just fix the size of their placeholders.
             plot.getPlaceholder().unbind("resize", onResize);
         }
         
-        plot.hooks.bindEvents.push(bindEvents);
-        plot.hooks.shutdown.push(shutdown);
     }
     
     $.plot.plugins.push({
         init: init,
         options: options,
         name: 'resize',
-        version: '1.0'
+        version: '1.1'
     });
 })(jQuery);
